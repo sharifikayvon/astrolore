@@ -7,7 +7,7 @@ import webbrowser
 class AstroLore():
 
     def __init__(self):
-        self.scifi_dataframe = pd.read_csv('scifi_dataset.csv')
+        self.scifi_dataframe = pd.read_csv('/Users/arnablahiry/repos/astrolore/data/scifi_dataset.csv')
         
  
         
@@ -23,11 +23,19 @@ class AstroLore():
             return f"{', '.join(sources[:-1])}, and {sources[-1]}"
 
     
-    def closest_star_finder(self):
+    def closest_star_finder(self, name = None, coords=None):
         
-        name = input('''Welcome to AstroLoreBot v1.0!\nGiven an astrophysical object of your choice, I output the nearest object on the sky referenced in sci-fi.\nWhenever you're ready, name your object:\n>>> ''')
-        self.coords = SkyCoord.from_name(name)
+        if name is None:
+            name = 'Andromeda'
+        if coords is None:
+            self.coords = SkyCoord.from_name(name)
+        else:
+            ra, dec = coords
+            self.coords = SkyCoord(ra=ra, dec=dec)
+        
         self.name = name.capitalize()
+
+        #name = input('''Welcome to AstroLoreBot v1.0!\nGiven an astrophysical object of your choice, I output the nearest object on the sky referenced in sci-fi.\nWhenever you're ready, name your object:\n>>> ''')
         self.scifi_dataframe['ang_sep'] = SkyCoord(ra=self.scifi_dataframe.ra.values, dec=self.scifi_dataframe.dec.values).separation(self.coords).value
         self.close_star = self.scifi_dataframe.loc[self.scifi_dataframe.ang_sep.idxmin()]
 
