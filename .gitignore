@@ -1,2 +1,4 @@
 # build directories / files
+build/
 *.egg-info/
+.DS_Store
