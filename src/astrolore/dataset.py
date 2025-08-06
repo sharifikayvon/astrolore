@@ -70,14 +70,14 @@ class astrolore_dataset():
         sep = round(self.close_object.ang_sep, 5)
         if sep < 0.01:
             output = (
-                f"\n\Searching around{self.name}..."
+                f"\nSearching around{self.name}...\n"
                 f"Your chosen object is referenced in science fiction!\n"
                 f"\nThe {self.close_object['name']} {self.close_object.object_type} appears/is referenced in {formatted_sources}. Here's some lore about {self.close_object['name']}:\n"
                 f"\n{self.close_object.lore}\n"
             )
         else:
             output = (
-                f"\n\Searching around{self.name}..."
+                f"\nSearching around{self.name}...\n"
                 f"The nearest object referenced in sci-fi is {sep} degrees away — "
                 f"The {self.close_object['name']} {self.close_object.object_type}. "
                 f"Here's some lore about {self.close_object['name']}:\n"
