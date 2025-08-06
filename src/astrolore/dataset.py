@@ -3,6 +3,8 @@ from astropy.coordinates import SkyCoord
 import astropy.units as u
 import webbrowser
 import os
+import numpy as np
+import matplotlib.pyplot as plt
 
 class astrolore_dataset():
     """This class contains the dataset of astronomical objects in science fiction properties,
@@ -15,12 +17,12 @@ class astrolore_dataset():
         
 
     @staticmethod
-    def format_sources(sources):
+    def format_sources(sources:list):
         """Formats output of sci-fi sources
         e.g. instead of 'Star Trek, Star Wars, Dune', output 'Star Trek, Star Wars, and Dune'
 
         Args:
-            sources (string): string of sci-fi sources, e.g. '(Star Trek, Star Wars, Dune)'
+            sources (list): list of sci-fi sources, e.g. '(Star Trek, Star Wars, Dune)'
 
         Returns:
             string: formatted sci-fi sources
@@ -34,8 +36,23 @@ class astrolore_dataset():
         else:
             return f"{', '.join(sources[:-1])}, and {sources[-1]}"
 
+    @staticmethod
+    def get_coords_from_name(name):
+        return SkyCoord.from_name(name)
     
-    def find_closest_object(self, name = None, coords=None):
+    def index_of_object(self, object):
+
+        if isinstance(object, str):
+            names = list(self.scifi_dataframe["name"])
+            idx = names.index(object)
+        elif isinstance(object, pd.Series):
+            raise NotImplementedError
+        else:
+            raise ValueError
+
+        return idx
+
+    def find_closest_object(self, name:str = None, coords=None):
         """Given either an input identifier, e.g. Arcturus, or coordinates (RA, DEC), this function searches the scifi_dataset 
         for the sci-fi source with the smallest angular separation
 
@@ -44,13 +61,14 @@ class astrolore_dataset():
             coords (tuple, optional): tuple of RA+DEC strings in format ('00h00m00s', '00d00m00s'). Defaults to None.
 
         Returns:
-            string: message to user describing nearest sci-fi star in dataset
+            close_object (pandas df)
         """        
         
         if name is None:
             name = 'Andromeda'
+
         if coords is None:
-            self.coords = SkyCoord.from_name(name)                
+            self.coords = self.get_coords_from_name(name)           
         else:
             ra, dec = coords
             self.coords = SkyCoord(ra=ra, dec=dec)
@@ -59,35 +77,121 @@ class astrolore_dataset():
 
         #name = input('''Welcome to AstroLoreBot v1.0!\nGiven an astrophysical object of your choice, I output the nearest object on the sky referenced in sci-fi.\nWhenever you're ready, name your object:\n>>> ''')
         self.scifi_dataframe['ang_sep'] = SkyCoord(ra=self.scifi_dataframe.ra.values, dec=self.scifi_dataframe.dec.values).separation(self.coords).value
-        self.close_object = self.scifi_dataframe.loc[self.scifi_dataframe.ang_sep.idxmin()]
+        close_object = self.scifi_dataframe.loc[self.scifi_dataframe.ang_sep.idxmin()]
+        return close_object
+    
 
+    def output_lore(self, close_object:pd.Series):
         # Convert string to list of sources
-        raw = self.close_object.scifi_source.strip("()")
+        raw = close_object.scifi_source.strip("()")
         sources = [s.strip() for s in raw.split(",")]
         formatted_sources = self.format_sources(sources)
 
         # Threshold for "exact match"
-        sep = round(self.close_object.ang_sep, 5)
+        sep = round(close_object.ang_sep, 5)
         if sep < 0.01:
             output = (
-                f"\nSearching around{self.name}...\n"
+                f"\nSearching around {self.name}...\n"
                 f"Your chosen object is referenced in science fiction!\n"
-                f"\nThe {self.close_object['name']} {self.close_object.object_type} appears/is referenced in {formatted_sources}. Here's some lore about {self.close_object['name']}:\n"
-                f"\n{self.close_object.lore}\n"
+                f"\nThe {close_object['name']} {close_object.object_type} appears/is referenced in {formatted_sources}. Here's some lore about {self.close_object['name']}:\n"
+                f"\n{close_object.lore}\n"
             )
         else:
             output = (
-                f"\nSearching around{self.name}...\n"
+                f"\nSearching around {self.name}...\n"
                 f"The nearest object referenced in sci-fi is {sep} degrees away — "
-                f"The {self.close_object['name']} {self.close_object.object_type}. "
-                f"Here's some lore about {self.close_object['name']}:\n"
-                f"\nThe {self.close_object['name']} {self.close_object.object_type} appears/is referenced in {formatted_sources}. {self.close_object.lore}"
+                f"The {close_object['name']} {close_object.object_type}. "
+                f"Here's some lore about {close_object['name']}:\n"
+                f"\nThe {close_object['name']} {close_object.object_type} appears/is referenced in {formatted_sources}. {self.close_object.lore}"
             )
 
         return output
-    
 
-    def visualize(self):
+    def init_catalog_map(self, user_object):
+
+        ra_deg = self.scifi_dataframe.ra
+        dec_deg = self.scifi_dataframe.dec
+
+        # NOTE: This line gives an error due to ra_deg being a string
+        ra_rad = np.radians(ra_deg)
+        ra_rad = np.remainder(ra_rad + 2*np.pi, 2*np.pi)
+        ra_rad[ra_rad > np.pi] -= 2*np.pi
+        ra_rad = -ra_rad
+
+        dec_rad = np.radians(dec_deg.values)
+
+        user_ra = user_object.ra.value
+        user_dec = user_object.dec.value
+        user_ra_rad = np.radians(user_ra)
+        user_ra_rad = np.remainder(user_ra_rad + 2*np.pi, 2*np.pi)
+        user_ra_rad -= 2 * np.pi if user_ra_rad > np.pi else 0
+        user_ra_rad = -user_ra_rad
+        user_dec_rad = np.radians(user_dec)
+
+        return ra_rad, dec_rad, user_ra_rad, user_dec_rad
+
+
+    def get_catalog_map(self, name=None):
+        if name == None:
+            name = 'Arcturus'
+        user_object = self.find_closest_object(name)
+        ra_rad, dec_rad, user_ra_rad, user_dec_rad = self.init_catalog_map(user_object)
+        fig, ax = plt.subplots(subplot_kw={'projection': 'aitoff'}, figsize=(26,9))
+
+        fig.patch.set_facecolor('black')           # Background of the figure
+        ax.set_facecolor('black')                  # Background of the plot area
+
+        ax.scatter(ra_rad, dec_rad, c='white', marker='*', s=60)
+        ax.scatter(user_ra_rad, user_dec_rad, c='gold', marker='*', s=300)
+        # ax.scatter(user_ra_rad, user_dec_rad, facecolors='none', edgecolors='white', marker='o', s=300, lw=1.5)
+
+        ra_hour_ticks_deg = np.arange(0, 360, 30)  # 0h to 23h
+        ra_hour_ticks_rad = -np.radians(np.remainder(ra_hour_ticks_deg, 360))  # Negate!
+        ra_hour_ticks_rad = np.remainder(ra_hour_ticks_rad + 2*np.pi, 2*np.pi)
+        ra_hour_ticks_rad[ra_hour_ticks_rad > np.pi] -= 2*np.pi
+        ra_hour_labels = [f'{int((deg / 15) % 24)}h' for deg in ra_hour_ticks_deg]
+        ax.set_xticks(ra_hour_ticks_rad)
+        ax.set_xticklabels(ra_hour_labels, fontsize=16, color='white')
+
+        dec_ticks_rad = ax.get_yticks()
+        dec_ticks_deg = np.degrees(dec_ticks_rad)
+        dec_tick_labels = [f"{int(np.round(deg))}°" for deg in dec_ticks_deg]
+        ax.set_yticks(dec_ticks_rad)
+        ax.set_yticklabels(dec_tick_labels, color='white', fontsize=24)
+
+        ax.spines['geo'].set_edgecolor('white')
+        ax.spines['geo'].set_linewidth(1)
+
+        ax.set_xlabel(r'$RA$', fontsize=24, color='white')
+        ax.set_ylabel(r'$DEC$', fontsize=24, color='white')
+
+        ax.xaxis.set_tick_params(labelsize=22, color='white')
+        ax.yaxis.set_tick_params(labelsize=24, color='white')
+
+        idx = self.index_of_object(name)
+        ax.annotate(
+            '',                                      # No text
+            xy=(ra_rad.iloc[idx], dec_rad.iloc[idx]),  # Arrowhead (end) point
+            xytext=(user_ra_rad, user_dec_rad),      # Start point
+            arrowprops=dict(
+                arrowstyle='-|>',                    # Style: simple arrow
+                color='white',                       # Arrow color
+                lw=1,                                # Line width
+                linestyle='--',
+                shrinkA=10,
+                shrinkB=5
+            ), zorder=-9999
+        )
+
+        ax.text(user_ra_rad, user_dec_rad-.06, name, ha='center', va='top', color='gold', fontsize=14, bbox=dict(facecolor='gainsboro', alpha=0.5))
+        ax.text(ra_rad.iloc[idx], dec_rad.iloc[idx]-.06, df['name'].iloc[idx], ha='center', va='top', color='white', 
+                fontsize=14, bbox=dict(facecolor='gainsboro', alpha=.5))
+
+        ax.grid(True, alpha=.6, color='white', linewidth=1)
+        return fig, ax
+
+
+    def load_aladin(self):
         """Launch Aladin window to observe nearest sci-fi source"""        
         if_vis = input('\nDo you want to observe the source in the real world?\n>>> ').strip().lower()
         if if_vis in ('yes', 'y'):
