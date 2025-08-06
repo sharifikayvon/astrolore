@@ -13,6 +13,16 @@ class AstroLore():
         
     @staticmethod
     def format_sources(sources):
+        """
+        Formats output of sci-fi sources
+        e.g. instead of 'Star Trek, Star Wars, Dune', output 'Star Trek, Star Wars, and Dune'
+
+        Args:
+            sources (string): string of sci-fi sources, e.g. '(Star Trek, Star Wars, Dune)'
+
+        Returns:
+            string: formatted sci-fi sources
+        """
         if not sources:
             return ""
         elif len(sources) == 1:
@@ -24,6 +34,17 @@ class AstroLore():
 
     
     def closest_star_finder(self, name = None, coords=None):
+        """
+        Given either an input identifier, e.g. Arcturus, or coordinates (RA, DEC), this function searches the scifi_dataset 
+        for the sci-fi source with the smallest angular separation
+
+        Args:
+            name (string, optional): . Defaults to None.
+            coords (tuple, optional): tuple of RA+DEC strings in format ('00h00m00s', '00d00m00s'). Defaults to None.
+
+        Returns:
+            string: message to user describing nearest sci-fi star in dataset
+        """        
         
         if name is None:
             name = 'Andromeda'
@@ -67,7 +88,10 @@ class AstroLore():
     
 
     def visualize(self):
+        """
+        Launch Aladin window to observe nearest sci-fi source
 
+        """        
         # Ask for visualization
         if_vis = input('\nDo you want to observe the source in the real world?\n>>> ').strip().lower()
         if if_vis in ('yes', 'y'):
