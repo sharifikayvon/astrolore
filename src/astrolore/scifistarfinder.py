@@ -2,14 +2,14 @@ import pandas as pd
 from astropy.coordinates import SkyCoord
 import astropy.units as u
 import webbrowser
-
+import os
 
 class AstroLore():
 
     def __init__(self):
-        self.scifi_dataframe = pd.read_csv('/Users/arnablahiry/repos/astrolore/data/scifi_dataset.csv')
+        path = os.path.dirname(__file__)
+        self.scifi_dataframe = pd.read_csv(os.path.join(path, "data", "scifi_dataset.csv"))
         
- 
         
     @staticmethod
     def format_sources(sources):
