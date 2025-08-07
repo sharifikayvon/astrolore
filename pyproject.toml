@@ -28,8 +28,5 @@ dependencies = [
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[tool.setuptools.package-data]
-myModule = ["*.csv"]
-
 [project.urls]
 Homepage = "https://github.com/sharifikayvon/astrolore"
