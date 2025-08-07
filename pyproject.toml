@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "astrolore"
+description = "package for finding nearest source in sci-fi"
+version = "1.0.0"
+readme = "README.md"
+
+authors = [
+     {name = "Joe Adamo", email = "jadamo@arizona.edu"},
+     {name = "Kayvon Sharifi", email = "ksharifi1@gsu.edu"},
+     {name = "Isabele Souza Vitorio", email = "ivitorio@umich.edu"},
+     {name = "Arnab Lahiry", email = "alahiry@ics.forth.gr"}
+]
+requires-python = ">= 3.9"
+dependencies = [
+    "pandas",
+    "astropy",
+    "numpy",
+    "build",
+    "setuptools",
+    "pywebview",
+    "matplotlib"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"astrolore.data" = ["*.csv", "*.png"]
+
+[project.urls]
+Homepage = "https://github.com/sharifikayvon/astrolore"

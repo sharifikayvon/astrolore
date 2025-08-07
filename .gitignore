@@ -1,0 +1,7 @@
+# build directories / files
+build/
+__pycache__/
+*.egg-info/
+.DS_Store
+*.pyc
+settings.json
