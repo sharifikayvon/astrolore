@@ -40,6 +40,12 @@ class astrolore_dataset():
     def get_coords_from_name(name):
         return SkyCoord.from_name(name)
     
+    def name_of_object(self, object):
+        if isinstance(object, pd.Series):
+            return object["name"]
+        else:
+            raise ValueError
+
     def index_of_object(self, object):
 
         if isinstance(object, str):
@@ -68,15 +74,15 @@ class astrolore_dataset():
             name = 'Andromeda'
 
         if coords is None:
-            self.coords = self.get_coords_from_name(name)           
+            self.user_coords = self.get_coords_from_name(name)           
         else:
             ra, dec = coords
-            self.coords = SkyCoord(ra=ra, dec=dec)
+            self.user_coords = SkyCoord(ra=ra, dec=dec)
         
         self.name = name.capitalize()
 
         #name = input('''Welcome to AstroLoreBot v1.0!\nGiven an astrophysical object of your choice, I output the nearest object on the sky referenced in sci-fi.\nWhenever you're ready, name your object:\n>>> ''')
-        self.scifi_dataframe['ang_sep'] = SkyCoord(ra=self.scifi_dataframe.ra.values, dec=self.scifi_dataframe.dec.values).separation(self.coords).value
+        self.scifi_dataframe['ang_sep'] = SkyCoord(ra=self.scifi_dataframe.ra.values, dec=self.scifi_dataframe.dec.values).separation(self.user_coords).value
         close_object = self.scifi_dataframe.loc[self.scifi_dataframe.ang_sep.idxmin()]
         return close_object
     
@@ -107,43 +113,52 @@ class astrolore_dataset():
 
         return output
 
-    def init_catalog_map(self, user_object):
+    def init_catalog_map(self, closest_object:pd.Series):
 
-        ra_deg = self.scifi_dataframe.ra
-        dec_deg = self.scifi_dataframe.dec
+        # TODO: Simplify this function (if time)
+        coords = SkyCoord(ra=self.scifi_dataframe.ra.values, dec=self.scifi_dataframe.dec.values)
 
-        # NOTE: This line gives an error due to ra_deg being a string
-        ra_rad = np.radians(ra_deg)
+        ra_rad = pd.DataFrame(np.radians(coords.ra.value))
         ra_rad = np.remainder(ra_rad + 2*np.pi, 2*np.pi)
         ra_rad[ra_rad > np.pi] -= 2*np.pi
         ra_rad = -ra_rad
 
-        dec_rad = np.radians(dec_deg.values)
+        dec_rad = pd.DataFrame(np.radians(coords.dec.value))
 
-        user_ra = user_object.ra.value
-        user_dec = user_object.dec.value
-        user_ra_rad = np.radians(user_ra)
-        user_ra_rad = np.remainder(user_ra_rad + 2*np.pi, 2*np.pi)
-        user_ra_rad -= 2 * np.pi if user_ra_rad > np.pi else 0
-        user_ra_rad = -user_ra_rad
-        user_dec_rad = np.radians(user_dec)
+        user_coords = SkyCoord(ra=closest_object.ra, dec=closest_object.dec)
+        closest_ra_rad, closest_dec_rad = self.convert_to_plotting_rad(user_coords)
 
-        return ra_rad, dec_rad, user_ra_rad, user_dec_rad
+        return ra_rad, dec_rad, closest_ra_rad, closest_dec_rad
 
+    def convert_to_plotting_rad(self, coords_in_deg):
 
-    def get_catalog_map(self, name=None):
-        if name == None:
-            name = 'Arcturus'
-        user_object = self.find_closest_object(name)
-        ra_rad, dec_rad, user_ra_rad, user_dec_rad = self.init_catalog_map(user_object)
+        closest_ra_rad = np.radians(coords_in_deg.ra.value)
+        closest_ra_rad = np.remainder(closest_ra_rad + 2*np.pi, 2*np.pi)
+        closest_ra_rad -= 2 * np.pi if closest_ra_rad > np.pi else 0
+        closest_ra_rad = -closest_ra_rad
+        closest_dec_rad = np.radians(coords_in_deg.dec.value)
+        return closest_ra_rad, closest_dec_rad
+
+    def get_catalog_map(self, user_name=None):
+        if user_name == None:
+            user_name = 'Arcturus'
+
+        user_coords = self.get_coords_from_name(user_name)
+        user_ra_rad, user_dec_rad = self.convert_to_plotting_rad(user_coords)
+
+        closest_object = self.find_closest_object(user_name)
+        closest_name = self.name_of_object(closest_object)
+        ra_rad, dec_rad, closest_ra_rad, closest_dec_rad = self.init_catalog_map(closest_object)
+        print(closest_ra_rad, user_ra_rad)
+
         fig, ax = plt.subplots(subplot_kw={'projection': 'aitoff'}, figsize=(26,9))
 
         fig.patch.set_facecolor('black')           # Background of the figure
         ax.set_facecolor('black')                  # Background of the plot area
 
         ax.scatter(ra_rad, dec_rad, c='white', marker='*', s=60)
-        ax.scatter(user_ra_rad, user_dec_rad, c='gold', marker='*', s=300)
-        # ax.scatter(user_ra_rad, user_dec_rad, facecolors='none', edgecolors='white', marker='o', s=300, lw=1.5)
+        ax.scatter(closest_ra_rad, closest_dec_rad, c='gold', marker='*', s=300)
+        ax.scatter(user_ra_rad, user_dec_rad, c="blue", marker="o", s=100)
 
         ra_hour_ticks_deg = np.arange(0, 360, 30)  # 0h to 23h
         ra_hour_ticks_rad = -np.radians(np.remainder(ra_hour_ticks_deg, 360))  # Negate!
@@ -168,10 +183,10 @@ class astrolore_dataset():
         ax.xaxis.set_tick_params(labelsize=22, color='white')
         ax.yaxis.set_tick_params(labelsize=24, color='white')
 
-        idx = self.index_of_object(name)
+        idx = self.index_of_object(closest_name)
         ax.annotate(
             '',                                      # No text
-            xy=(ra_rad.iloc[idx], dec_rad.iloc[idx]),  # Arrowhead (end) point
+            xy=(closest_ra_rad, closest_dec_rad),  # Arrowhead (end) point
             xytext=(user_ra_rad, user_dec_rad),      # Start point
             arrowprops=dict(
                 arrowstyle='-|>',                    # Style: simple arrow
@@ -183,8 +198,13 @@ class astrolore_dataset():
             ), zorder=-9999
         )
 
-        ax.text(user_ra_rad, user_dec_rad-.06, name, ha='center', va='top', color='gold', fontsize=14, bbox=dict(facecolor='gainsboro', alpha=0.5))
-        ax.text(ra_rad.iloc[idx], dec_rad.iloc[idx]-.06, df['name'].iloc[idx], ha='center', va='top', color='white', 
+        # text for the closest object in the dataset
+        ax.text(closest_ra_rad, closest_dec_rad-.06, 
+                closest_name, ha='center', va='top', color='gold', 
+                fontsize=14, bbox=dict(facecolor='gainsboro', alpha=0.5))
+        # text for the object provided by the user
+        ax.text(user_ra_rad, user_dec_rad-.06, 
+                user_name, ha='center', va='top', color='white', 
                 fontsize=14, bbox=dict(facecolor='gainsboro', alpha=.5))
 
         ax.grid(True, alpha=.6, color='white', linewidth=1)
