@@ -21,7 +21,8 @@ dependencies = [
     "numpy",
     "build",
     "setuptools",
-    "pywebview"
+    "pywebview",
+    "matplotlib"
 ]
 
 [tool.setuptools.packages.find]
