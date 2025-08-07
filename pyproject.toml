@@ -22,7 +22,6 @@ dependencies = [
     "build",
     "setuptools",
     "pywebview",
-    "tkinter",
     "matplotlib"
 ]
 
