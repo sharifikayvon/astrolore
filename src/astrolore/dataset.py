@@ -183,20 +183,21 @@ class astrolore_dataset():
         ax.xaxis.set_tick_params(labelsize=22, color='white')
         ax.yaxis.set_tick_params(labelsize=24, color='white')
 
-        idx = self.index_of_object(closest_name)
-        ax.annotate(
-            '',                                      # No text
-            xy=(closest_ra_rad, closest_dec_rad),  # Arrowhead (end) point
-            xytext=(user_ra_rad, user_dec_rad),      # Start point
-            arrowprops=dict(
-                arrowstyle='-|>',                    # Style: simple arrow
-                color='white',                       # Arrow color
-                lw=1,                                # Line width
-                linestyle='--',
-                shrinkA=10,
-                shrinkB=5
-            ), zorder=-9999
-        )
+        if closest_ra_rad != user_ra_rad and \
+           closest_dec_rad != user_dec_rad:
+            ax.annotate(
+                '',                                      # No text
+                xy=(closest_ra_rad, closest_dec_rad),  # Arrowhead (end) point
+                xytext=(user_ra_rad, user_dec_rad),      # Start point
+                arrowprops=dict(
+                    arrowstyle='-|>',                    # Style: simple arrow
+                    color='white',                       # Arrow color
+                    lw=1,                                # Line width
+                    linestyle='--',
+                    shrinkA=10,
+                    shrinkB=5
+                ), zorder=-9999
+            )
 
         # text for the closest object in the dataset
         ax.text(closest_ra_rad, closest_dec_rad-.06, 
