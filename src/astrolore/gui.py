@@ -220,8 +220,8 @@ class main_gui():
                             dec_str = f"{d}d{am}m{asec}s"
                             coords = (ra_str, dec_str)
                             closest_object = astrolore.find_closest_object(name=None, coords=coords)
-                        except Exception:
-                            output.config(text="Invalid coordinates, please try again (Hint: ICRS)")
+                        except Exception as e:
+                            output.config(text=f"Invalid coordinates, please try again (Hint: ICRS) {str(e)}")
                             return
 
                     lore = astrolore.output_lore(closest_object)

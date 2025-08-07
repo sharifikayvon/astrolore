@@ -90,7 +90,11 @@ class astrolore_dataset():
         Returns:
             close_object (pandas df)
         """        
+
         self.name_flag = name
+
+        if name==None:
+            name='Coordinates'
 
         if name[0].isupper():
             self.name = name
@@ -101,7 +105,7 @@ class astrolore_dataset():
             self.user_coords = self.get_coords_from_name(name)           
         else:
             ra, dec = coords
-            self.user_coords = SkyCoord(ra=ra, dec=dec)
+            self.user_coords = SkyCoord(ra, dec, frame='icrs', unit=(u.hourangle, u.deg))
         
         #name = input('''Welcome to AstroLoreBot v1.0!\nGiven an astrophysical object of your choice, I output the nearest object on the sky referenced in sci-fi.\nWhenever you're ready, name your object:\n>>> ''')
         self.scifi_dataframe['ang_sep'] = SkyCoord(ra=self.scifi_dataframe.ra.values, dec=self.scifi_dataframe.dec.values).separation(self.user_coords).value
