@@ -151,6 +151,8 @@ class astrolore_dataset():
         closest_name = self.name_of_object(closest_object)
         ra_rad, dec_rad, closest_ra_rad, closest_dec_rad = self.init_catalog_map(closest_object)
 
+        plt.rcParams.update({'mathtext.default': 'regular',
+                             'font.family': 'Times'})
         fig, ax = plt.subplots(subplot_kw={'projection': 'aitoff'}, figsize=(26,9))
 
         fig.patch.set_facecolor('black')           # Background of the figure
