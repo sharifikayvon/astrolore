@@ -5,7 +5,7 @@ the nearest sci-fi source in the [Aladin Sky Atlas](https://aladin.cds.unistra.f
 
 ### Installation
 
-This package can be pip installed. The PyPI page can be found [here](https://youtu.be/dQw4w9WgXcQ?si=PrA9bHia6hlaMwB-).
+This package can be pip installed.
 
 ```
 pip install astrolore
@@ -16,6 +16,8 @@ pip install astrolore
 * astropy
 * numpy
 * matplotlib
+* pywebview
+* tkinter
 
 ### Running the code
 
@@ -35,4 +37,6 @@ astrolore.closest_star_finder(obj_name)
 * Isabele Souza Vitorio (ivitorio@umich.edu)
 * Joe Adamo (jadamo@arizona.edu)
 * Kayvon Sharifi (ksharifi1@gsu.edu)
+
+
 
