@@ -244,6 +244,9 @@ class astrolore_dataset():
                 fontsize=10, bbox=dict(facecolor='gainsboro', alpha=.5))
 
         ax.grid(True, alpha=.6, color='white', linewidth=1)
+
+        plt.close(fig)
+
         return fig, ax
 
 

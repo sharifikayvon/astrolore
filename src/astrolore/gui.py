@@ -225,7 +225,7 @@ class main_gui():
                         closest_object = astrolore.find_closest_object(name=name, coords=None)
                         visualize_button.config(command=lambda: self.aladin_webview(closest_object))
 
-                    else:
+                    else: 
                         try:
                             h = int(ra_h.get())
                             m = int(ra_m.get())
