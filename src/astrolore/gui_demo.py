@@ -5,103 +5,132 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 from PIL import Image, ImageTk
 
+# Load your dataset (replace with your actual dataset loader)
 astrolore = astrolore_dataset()
 
-# URL for AladinLite viewer (example static, you might want to generate this dynamically)
-
-
-
-# Create main window
-window = tk.Tk()
-window.title("AstroLore Finder")
-#window.geometry("800x600")  # Set initial size
-window.resizable(True, True)
-
-# Fonts
+# Constants for styling
 HEADER_FONT = ("Helvetica", 28, "bold", "italic")
-radio_button_font = ("Menlo", 13, "bold", "italic")
+LABEL_FONT = ("Helvetica", 16, "italic")
+OUTPUT_FONT = ("Helvetica", 12)
+TEXT_FONT = ("Helvetica", 12)
+RADIO_FONT = ("Menlo", 13, "bold", "italic")
+BG_COLOR = "#000000"  # matches dark background with overlay
 
-# Frame for padding
-frame = ttk.Frame(window, padding="15 15 15 15")
-frame.pack(fill=tk.BOTH, expand=True)
+# Initialize main window
+window = tk.Tk()
+window.title("AstroLore")
+window.geometry("800x600")
+window.resizable(False, False)
 
-# Title
-title = tk.Label(frame, text="✨ AstroLore ✨", font=HEADER_FONT)
-title.pack(pady=(0, 3))
+# Load and resize background image (change path to your actual image)
+bg_image = Image.open("background.png")
+bg_image = bg_image.resize((800, 600), Image.LANCZOS)
+bg_photo = ImageTk.PhotoImage(bg_image)
+window.bg_photo = bg_photo  # prevent GC
+
+# Create canvas with background image
+canvas = tk.Canvas(window, width=800, height=600, highlightthickness=0)
+canvas.pack(fill=tk.BOTH, expand=True)
+canvas.create_image(0, 0, anchor=tk.NW, image=bg_photo)
+
+# Semi-transparent black overlay rectangle for UI clarity
+canvas.create_rectangle(150, 100, 650, 500, fill="black", stipple="gray50", outline="")
+
+# Container frame centered on canvas with dark background
+frame = tk.Frame(canvas, bg=BG_COLOR)
+canvas.create_window((400, 300), window=frame, anchor="center")
+
+# Title and description labels
+title = tk.Label(frame, text="✨ AstroLore ✨", font=HEADER_FONT, fg="white", bg=BG_COLOR)
+title.pack(pady=(0, 5))
 
 subtitle = tk.Label(
     frame,
-    wraplength=420,
-    text='Welcome to AstroLoreBot v1.0!\nGiven an astrophysical object of your choice,\nI output the nearest object on the sky referenced in sci-fi.',
+    text="Welcome to AstroLoreBot v1.0!\nGiven an astrophysical object of your choice,\n"
+         "I output the nearest object on the sky referenced in sci-fi.",
+    font=LABEL_FONT,
+    fg="white",
+    bg=BG_COLOR,
     justify="center",
-    padx=15,
-    pady=15
+    wraplength=400,
+    padx=20,
+    pady=20,
 )
-subtitle.pack(pady=(5, 5), fill=tk.X)
+subtitle.pack(pady=(0, 10))
 
-label = tk.Label(frame, text="Search by:")
-label.pack(pady=(0, 3))
+# Search mode selection
+search_label = tk.Label(frame, text="Search by:", font=LABEL_FONT, fg="white", bg=BG_COLOR)
+search_label.pack(pady=10)
 
-mode_input_var = tk.StringVar(value='name')
+mode_input_var = tk.StringVar(value="name")
 
-def update_input_mode():
-    
-    # Reset output and UI state
-    output.config(text="")
-    button.config(text="Search")
-    button_state.set("process")
-    plot_button.pack_forget()
-    visualize_button.pack_forget()
+radio_frame = tk.Frame(frame, bg=BG_COLOR)
+radio_frame.pack()
 
+name_radio = tk.Radiobutton(
+    radio_frame, text="Name", variable=mode_input_var, value="name",
+    font=RADIO_FONT, fg="white", bg=BG_COLOR, selectcolor=BG_COLOR, activebackground=BG_COLOR,
+    command=lambda: update_input_mode()
+)
+name_radio.pack(side=tk.LEFT, padx=(5,5))
 
-    for widget in input_frame.winfo_children():
-        widget.pack_forget()
-    if mode_input_var.get() == "name":
-        name_entry.pack(pady=5)
-    else:
-        ra_frame.pack(pady=5)
-        dec_frame.pack(pady=5)
+coord_radio = tk.Radiobutton(
+    radio_frame, text="Coordinates (RA/DEC)", variable=mode_input_var, value="coords",
+    font=RADIO_FONT, fg="white", bg=BG_COLOR, selectcolor=BG_COLOR, activebackground=BG_COLOR,
+    command=lambda: update_input_mode()
+)
+coord_radio.pack(side=tk.LEFT, padx=10)
 
-# Radio buttons to choose mode
-frame_buttons = tk.Frame(frame)
-ttk.Radiobutton(frame_buttons, text="Name", variable=mode_input_var, value="name", command=update_input_mode).pack(side="left", padx=10)
-ttk.Radiobutton(frame_buttons, text="Coordinates (RA/DEC)", variable=mode_input_var, value="coords", command=update_input_mode).pack(side="left", padx=10)
-frame_buttons.pack(pady=5)
+# Input frame for name or coordinate entries
+input_frame = tk.Frame(frame, bg=BG_COLOR)
+input_frame.pack(pady=10)
 
-input_frame = tk.Frame(frame)
-input_frame.pack()
+# Name entry (default)
+name_entry = tk.Entry(input_frame, font=TEXT_FONT, justify="center", width=35)
+name_entry.pack()
 
 # RA inputs: h, m, s
-ra_frame = tk.Frame(input_frame)
+ra_frame = tk.Frame(input_frame, bg=BG_COLOR)
 ra_h = ttk.Entry(ra_frame, width=5)
 ra_m = ttk.Entry(ra_frame, width=5)
 ra_s = ttk.Entry(ra_frame, width=5)
-tk.Label(ra_frame, text="RA:",font=radio_button_font).pack(side="left", padx=5)
+tk.Label(ra_frame, text="RA:", font=RADIO_FONT, fg="white", bg=BG_COLOR).pack(side="left", padx=5)
 ra_h.pack(side="left")
-tk.Label(ra_frame, text="h",font=radio_button_font).pack(side="left")
+tk.Label(ra_frame, text="h", font=RADIO_FONT, fg="white", bg=BG_COLOR).pack(side="left")
 ra_m.pack(side="left")
-tk.Label(ra_frame, text="m",font=radio_button_font).pack(side="left")
+tk.Label(ra_frame, text="m", font=RADIO_FONT, fg="white", bg=BG_COLOR).pack(side="left")
 ra_s.pack(side="left")
-tk.Label(ra_frame, text="s",font=radio_button_font).pack(side="left")
+tk.Label(ra_frame, text="s", font=RADIO_FONT, fg="white", bg=BG_COLOR).pack(side="left")
 
 # DEC inputs: deg, arcmin, arcsec
-dec_frame = tk.Frame(input_frame)
+dec_frame = tk.Frame(input_frame, bg=BG_COLOR)
 dec_d = ttk.Entry(dec_frame, width=5)
 dec_m = ttk.Entry(dec_frame, width=5)
 dec_s = ttk.Entry(dec_frame, width=5)
-tk.Label(dec_frame, text="DEC:",font=radio_button_font).pack(side="left", padx=0)
+tk.Label(dec_frame, text="DEC:", font=RADIO_FONT, fg="white", bg=BG_COLOR).pack(side="left", padx=5)
 dec_d.pack(side="left")
-tk.Label(dec_frame, text="°",font=radio_button_font).pack(side="left")
+tk.Label(dec_frame, text="°", font=RADIO_FONT, fg="white", bg=BG_COLOR).pack(side="left")
 dec_m.pack(side="left")
-tk.Label(dec_frame, text="′",font=radio_button_font).pack(side="left")
+tk.Label(dec_frame, text="′", font=RADIO_FONT, fg="white", bg=BG_COLOR).pack(side="left")
 dec_s.pack(side="left")
-tk.Label(dec_frame, text="″",font=radio_button_font).pack(side="left")
+tk.Label(dec_frame, text="″", font=RADIO_FONT, fg="white", bg=BG_COLOR).pack(side="left")
 
-name_entry = ttk.Entry(input_frame, width=30)
-name_entry.pack()
+# Initially hide coordinate inputs
+ra_frame.pack_forget()
+dec_frame.pack_forget()
+
+# Output label for results
+output = tk.Label(frame, font=OUTPUT_FONT, fg="white", bg=BG_COLOR, wraplength=400, justify="center")
+output.pack(pady=(10, 5), fill=tk.X)
+
+# Buttons Frame
+buttons_frame = tk.Frame(frame, bg=BG_COLOR)
+buttons_frame.pack(pady=10)
+
+# Search button
+button_state = tk.StringVar(value="process")
 
 def reset_all():
-    # Reset fields
     name_entry.delete(0, tk.END)
     ra_h.delete(0, tk.END)
     ra_m.delete(0, tk.END)
@@ -113,15 +142,26 @@ def reset_all():
     mode_input_var.set("name")
     update_input_mode()
     reset_button.pack_forget()
+    plot_button.pack_forget()
+    visualize_button.pack_forget()
 
+def update_input_mode():
+    output.config(text="")
+    button.config(text="Search")
+    button_state.set("process")
+    plot_button.pack_forget()
+    visualize_button.pack_forget()
 
-button_state = tk.StringVar(value="process")
+    for widget in input_frame.winfo_children():
+        widget.pack_forget()
 
+    if mode_input_var.get() == "name":
+        name_entry.pack()
+    else:
+        ra_frame.pack(pady=5)
+        dec_frame.pack(pady=5)
 
-visualize_button = ttk.Button(frame, text="View in Aladin", command=astrolore.aladin_webview)
-visualize_button.config(state='normal')
-
-
+# Plot button to show sample plot
 
 def show_plot(get_fig_func):
     # Create a new pop-up window
@@ -141,85 +181,66 @@ def show_plot(get_fig_func):
 
 
 
+plot_button = ttk.Button(buttons_frame, text="Full Sky Plot", command=show_plot)
 
-plot_button = ttk.Button(frame, text="Full Sky Map", command=show_plot)
-
+# Visualize button for sky observation
+visualize_button = ttk.Button(buttons_frame, text="View in Aladin", command=astrolore.aladin_webview)
 
 def handle_click():
     if button_state.get() == "process":
         try:
             if mode_input_var.get() == "name":
-                
-                button.config(text="Search")
-                #button_state.set("process")
-                name = name_entry.get()
+                name = name_entry.get().strip()
+                if not name:
+                    output.config(text="Please enter a name.")
+                    return
                 closest_object = astrolore.find_closest_object(name=name, coords=None)
-                lore = astrolore.output_lore(closest_object)
-                output.config(text=lore)
-                # Define what to plot when Show Plot is clicked
-         
-                plot_button.config(command=lambda: show_plot(astrolore.get_catalog_map()))
-                plot_button.pack(pady=(5,10))
-                visualize_button.pack(pady=(5, 10))
-
             else:
                 try:
-                    button.config(text="Search")
-                    #button_state.set("process")
                     h = int(ra_h.get())
                     m = int(ra_m.get())
                     s = float(ra_s.get())
                     d = int(dec_d.get())
                     am = int(dec_m.get())
                     asec = float(dec_s.get())
-                    from astropy.coordinates import SkyCoord
-                    import astropy.units as u
                     ra_str = f"{h}h{m}m{s}s"
                     dec_str = f"{d}d{am}m{asec}s"
                     coords = (ra_str, dec_str)
                     closest_object = astrolore.find_closest_object(name=None, coords=coords)
-                    lore = astrolore.output_lore(closest_object)
-                    output.config(text=lore)
-                    plot_button.config(command=lambda: show_plot(astrolore.get_catalog_map()))
-                    plot_button.pack(pady=(5,10))
-                    visualize_button.pack(pady=(5, 10))
-                except Exception as e:
-                    output.config(text="Invalid coordinates, try again (Hint: ICRS)")
-            button.config(text="Search Again")
-            #button_state.set("reset")
-            reset_button.pack(pady=(5, 10))
+                except Exception:
+                    output.config(text="Invalid coordinates, please try again (Hint: ICRS)")
+                    return
 
-        except Exception as err:
+            lore = astrolore.output_lore(closest_object)
+            output.config(text=lore)
+            plot_button.config(command=lambda: show_plot(astrolore.get_catalog_map()))
+            plot_button.pack(side=tk.LEFT, padx=5)
+            visualize_button.pack(side=tk.LEFT, padx=5)
+
+            button.config(text="Search Again")
+            button_state.set("reset")
+            reset_button.pack(side=tk.LEFT, padx=5)
+
+        except Exception:
             output.config(text="It's dark out here...\nMaybe verify the spelling?")
             plot_button.pack_forget()
             visualize_button.pack_forget()
 
     else:
         reset_all()
-        button.config(text="Search Again")
+        button.config(text="Search")
         button_state.set("process")
-    window.update_idletasks()
-    window.geometry("")
-    #window.geometry("800x700")  # Set initial size
 
+button = ttk.Button(buttons_frame, text="Search", command=handle_click)
+button.pack(side=tk.LEFT, padx=5)
 
-button = ttk.Button(frame, text="Search", command=handle_click)
-button.pack(pady=10)
+reset_button = ttk.Button(buttons_frame, text="Reset", command=reset_all)
+reset_button.pack_forget()
 
+# Bind Enter key to search
 window.bind('<Return>', lambda event: handle_click())
 
-
-
-output = tk.Label(frame, wraplength=420, justify="center", anchor="center", padx=15, pady=20)
-output.pack(pady=(5, 5), fill=tk.X)
-
-reset_button = ttk.Button(frame, text="Reset", command=lambda: reset_all())
-reset_button.pack(pady=(5, 10))
-reset_button.pack_forget()  # Hidden by default
-
-
-
-
+# Start with correct input mode
 update_input_mode()
 
 
@@ -231,4 +252,7 @@ window.protocol("WM_DELETE_WINDOW", on_closing)
 
 
 
+# Run main loop
 window.mainloop()
+
+
