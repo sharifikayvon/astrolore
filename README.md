@@ -16,6 +16,8 @@ pip install astrolore
 * astropy
 * numpy
 * matplotlib
+* pywebview
+* tkinter
 
 ### Running the code
 
@@ -35,4 +37,5 @@ astrolore.closest_star_finder(obj_name)
 * Isabele Souza Vitorio (ivitorio@umich.edu)
 * Joe Adamo (jadamo@arizona.edu)
 * Kayvon Sharifi (ksharifi1@gsu.edu)
+
 
