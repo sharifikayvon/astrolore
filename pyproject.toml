@@ -20,7 +20,8 @@ dependencies = [
     "astropy",
     "numpy",
     "build",
-    "setuptools"
+    "setuptools",
+    "pywebview"
 ]
 
 [tool.setuptools.packages.find]
