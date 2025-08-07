@@ -1,11 +1,11 @@
 # astrolore
 
-This package, given the name of any astrophysical object, finds the nearest source that has been referenced in science fiction. There is an option to launch your browser to "observe" 
-the nearest sci-fi source in the [Aladin Sky Atlas](https://aladin.cds.unistra.fr/AladinLite/)
+This package, given the name of any astrophysical object, finds the nearest source that has been referenced in science fiction. There are options to 1) observe
+the nearest sci-fi source in the [Aladin Sky Atlas](https://aladin.cds.unistra.fr/AladinLite/) and 2) generate a sky plot showing the separation between the input object and nearest sci-fi source.
 
 ### Installation
 
-This package can be pip installed. The PyPI page can be found [here](https://youtu.be/dQw4w9WgXcQ?si=PrA9bHia6hlaMwB-)
+This package can be pip installed. The PyPI page can be found [here](https://youtu.be/dQw4w9WgXcQ?si=PrA9bHia6hlaMwB-).
 
 ```
 pip install astrolore
@@ -15,6 +15,7 @@ pip install astrolore
 * pandas
 * astropy
 * numpy
+* matplotlib
 
 ### Running the code
 
@@ -22,6 +23,8 @@ pip install astrolore
 import astrolore
 
 obj_name = 'Pleiades'
+
+
 
 astrolore.closest_star_finder(obj_name)
 ```
@@ -32,3 +35,4 @@ astrolore.closest_star_finder(obj_name)
 * Isabele Souza Vitorio (ivitorio@umich.edu)
 * Joe Adamo (jadamo@arizona.edu)
 * Kayvon Sharifi (ksharifi1@gsu.edu)
+
