@@ -1,12 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
-from scifistarfinder import *
-import webview
-import threading
-import time
+from dataset import *
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
 from PIL import Image, ImageTk
 
-astrolore = AstroLore()
+astrolore = astrolore_dataset()
 
 # URL for AladinLite viewer (example static, you might want to generate this dynamically)
 
@@ -51,6 +50,7 @@ def update_input_mode():
     output.config(text="")
     button.config(text="Search")
     button_state.set("process")
+    plot_button.pack_forget()
     visualize_button.pack_forget()
 
 
@@ -118,8 +118,34 @@ def reset_all():
 button_state = tk.StringVar(value="process")
 
 
-visualize_button = ttk.Button(frame, text="Observe in Sky", command=astrolore.visualize_gui)
+visualize_button = ttk.Button(frame, text="Observe in Sky", command=astrolore.aladin_webview)
 visualize_button.config(state='normal')
+
+
+def show_plot():
+    # Create a new pop-up window
+    plot_window = tk.Toplevel(window)
+    plot_window.title("Plot Window")
+    plot_window.geometry("500x400")
+
+    # Create the plot
+    fig, ax = plt.subplots(figsize=(5, 3.5))
+    ax.plot([0, 1, 2, 3], [1, 2, 3, 4], marker='o')
+    ax.set_title("Sky MAP")
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+
+    # Embed plot in the pop-up window
+    canvas = FigureCanvasTkAgg(fig, master=plot_window)
+    canvas.draw()
+    canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+
+    # Add a close button
+    ttk.Button(plot_window, text="Close", command=plot_window.destroy).pack(pady=5)
+
+
+plot_button = ttk.Button(frame, text="Show Plot", command=show_plot)
+
 
 def handle_click():
     if button_state.get() == "process":
@@ -129,8 +155,10 @@ def handle_click():
                 button.config(text="Search")
                 #button_state.set("process")
                 name = name_entry.get()
-                closest_star = astrolore.closest_star_finder(name=name, coords=None)
-                output.config(text=closest_star)
+                closest_object = astrolore.find_closest_object(name=name, coords=None)
+                lore = astrolore.output_lore(closest_object)
+                output.config(text=lore)
+                plot_button.pack(pady=(5,10))
                 visualize_button.pack(pady=(5, 10))
 
             else:
@@ -148,18 +176,22 @@ def handle_click():
                     ra_str = f"{h}h{m}m{s}s"
                     dec_str = f"{d}d{am}m{asec}s"
                     coords = (ra_str, dec_str)
-                    closest_star = astrolore.closest_star_finder(name=None, coords=coords)
-                    output.config(text=closest_star)
+                    closest_object = astrolore.find_closest_object(name=None, coords=coords)
+                    lore = astrolore.output_lore(closest_object)
+                    output.config(text=lore)
+                    plot_button.pack(pady=(5,10))
                     visualize_button.pack(pady=(5, 10))
                 except Exception as e:
                     output.config(text="Invalid coordinates, try again (Hint: ICRS)")
-            button.config(text="Search Another")
+            button.config(text="Search Again")
             #button_state.set("reset")
             reset_button.pack(pady=(5, 10))
 
         except Exception as err:
             output.config(text="It's dark out here...\nMaybe verify the spelling?")
-            visualize_button.pack_forget()  
+            plot_button.pack_forget()
+            visualize_button.pack_forget()
+
     else:
         reset_all()
         button.config(text="Search Again")
@@ -184,5 +216,17 @@ reset_button.pack(pady=(5, 10))
 reset_button.pack_forget()  # Hidden by default
 
 
+
+
 update_input_mode()
+
+
+def on_closing():
+    window.destroy()
+    window.quit()  # Ensures the mainloop stops and the process exits
+
+window.protocol("WM_DELETE_WINDOW", on_closing)
+
+
+
 window.mainloop()
