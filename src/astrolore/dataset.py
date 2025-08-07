@@ -257,7 +257,7 @@ class astrolore_dataset():
             webbrowser.open(url)
 
 
-    def aladin_webview(self):
+    '''def aladin_webview(self):
         coord_close_object = SkyCoord(ra=self.close_object.ra, dec=self.close_object.dec)
         url = f"https://aladin.u-strasbg.fr/AladinLite/?target={coord_close_object.ra.deg}%20{coord_close_object.dec.deg}&fov=1.5"
         # Create the embedded webview window inside the Toplevel
@@ -267,12 +267,9 @@ class astrolore_dataset():
             width=600,
             height=400,
             resizable=False,
-            #gui='tk',
-            #master=win
         )
 
-        # Start webview in embedded mode; this will NOT block Tkinter mainloop
-        webview.start()#gui='tk')
+        webview.start()'''
 
 
 

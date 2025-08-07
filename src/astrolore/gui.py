@@ -14,6 +14,20 @@ class main_gui():
         self.dataset = astrolore_dataset()
         self.setup_main_gui()
 
+    @staticmethod
+    def aladin_webview(close_object):
+        coord_close_object = SkyCoord(ra=close_object.ra, dec=close_object.dec)
+        url = f"https://aladin.u-strasbg.fr/AladinLite/?target={coord_close_object.ra.deg}%20{coord_close_object.dec.deg}&fov=1.5"
+        # Create the embedded webview window inside the Toplevel
+        webview.create_window(
+            "Aladin",
+            url,
+            width=600,
+            height=400,
+            resizable=False,
+        )
+
+        webview.start()
 
     def setup_main_gui(self):
 
@@ -197,7 +211,8 @@ class main_gui():
         plot_button = ttk.Button(buttons_frame, text="Full Sky Plot", command=show_plot)
 
         # Visualize button for sky observation
-        visualize_button = ttk.Button(buttons_frame, text="View in Aladin", command=astrolore.aladin_webview)
+        visualize_button = ttk.Button(buttons_frame, text="View in Aladin")
+        visualize_button.pack_forget()
 
         def handle_click():
             if button_state.get() == "process":
@@ -208,6 +223,8 @@ class main_gui():
                             output.config(text="Please enter a name.")
                             return
                         closest_object = astrolore.find_closest_object(name=name, coords=None)
+                        visualize_button.config(command=lambda: self.aladin_webview(closest_object))
+
                     else:
                         try:
                             h = int(ra_h.get())
@@ -220,6 +237,8 @@ class main_gui():
                             dec_str = f"{d}d{am}m{asec}s"
                             coords = (ra_str, dec_str)
                             closest_object = astrolore.find_closest_object(name=None, coords=coords)
+                            visualize_button.config(command=lambda: self.aladin_webview(closest_object))
+
                         except Exception as e:
                             output.config(text=f"Invalid coordinates, please try again (Hint: ICRS) {str(e)}")
                             return
