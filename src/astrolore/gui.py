@@ -25,6 +25,7 @@ class main_gui():
         frame = ttk.Frame(window, padding="15 15 15 15")
         frame.pack(fill=tk.BOTH, expand=True)
 
+
         # Title
         title = tk.Label(frame, text="✨ AstroLore ✨", font=HEADER_FONT)
         title.pack(pady=(0, 3))

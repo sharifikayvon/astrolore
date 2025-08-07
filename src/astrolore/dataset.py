@@ -70,9 +70,14 @@ class astrolore_dataset():
         Returns:
             close_object (pandas df)
         """        
-        
-        if name is None:
-            name = 'Andromeda'
+        self.name_flag = name
+
+        if name[0].isupper():
+            self.name = name
+        else:
+            self.name = name.capitalize()
+
+
 
         if coords is None:
             self.user_coords = self.get_coords_from_name(name)           
@@ -80,7 +85,6 @@ class astrolore_dataset():
             ra, dec = coords
             self.user_coords = SkyCoord(ra=ra, dec=dec)
         
-        self.name = name.capitalize()
 
         #name = input('''Welcome to AstroLoreBot v1.0!\nGiven an astrophysical object of your choice, I output the nearest object on the sky referenced in sci-fi.\nWhenever you're ready, name your object:\n>>> ''')
         self.scifi_dataframe['ang_sep'] = SkyCoord(ra=self.scifi_dataframe.ra.values, dec=self.scifi_dataframe.dec.values).separation(self.user_coords).value
@@ -96,16 +100,22 @@ class astrolore_dataset():
 
         # Threshold for "exact match"
         sep = round(close_object.ang_sep, 5)
+
+        if self.name_flag is None:
+            text = 'your coordinates'
+        else:
+            text = self.name
+
         if sep < 0.01:
             output = (
-                f"\nSearching around {self.name}...\n"
+                f"\nSearching around {text}...\n"
                 f"Your chosen object is referenced in science fiction!\n"
                 f"\nThe {close_object['name']} {close_object.object_type} appears/is referenced in {formatted_sources}. Here's some lore about {close_object['name']}:\n"
                 f"\n{close_object.lore}\n"
             )
         else:
             output = (
-                f"\nSearching around {self.name}...\n"
+                f"\nSearching around {text}...\n"
                 f"The nearest object referenced in sci-fi is {sep} degrees away — "
                 f"The {close_object['name']} {close_object.object_type}. "
                 f"Here's some lore about {close_object['name']}:\n"
@@ -141,15 +151,12 @@ class astrolore_dataset():
         closest_dec_rad = np.radians(coords_in_deg.dec.value)
         return closest_ra_rad, closest_dec_rad
 
-    def get_catalog_map(self, user_name=None):
+    def get_catalog_map(self):
 
-        if user_name == None:
-            user_name = 'Arcturus'
-
-        user_coords = self.get_coords_from_name(user_name)
+        user_coords = self.user_coords
         user_ra_rad, user_dec_rad = self.convert_to_plotting_rad(user_coords)
 
-        closest_object = self.find_closest_object(user_name)
+        closest_object = self.close_object
         closest_name = self.name_of_object(closest_object)
         ra_rad, dec_rad, closest_ra_rad, closest_dec_rad = self.init_catalog_map(closest_object)
 
@@ -160,9 +167,9 @@ class astrolore_dataset():
         fig.patch.set_facecolor('black')           # Background of the figure
         ax.set_facecolor('black')                  # Background of the plot area
 
-        ax.scatter(ra_rad, dec_rad, c='white', marker='*', s=60)
-        ax.scatter(closest_ra_rad, closest_dec_rad, c='gold', marker='*', s=150)
-        ax.scatter(user_ra_rad, user_dec_rad, c="red", marker="*", s=250)
+        ax.scatter(ra_rad, dec_rad, c='white', marker='*', s=40)
+        ax.scatter(closest_ra_rad, closest_dec_rad, c='gold', marker='*', s=90)
+        ax.scatter(user_ra_rad, user_dec_rad, c="red", marker="*", s=150)
 
         ra_hour_ticks_deg = np.arange(0, 360, 30)  # 0h to 23h
         ra_hour_ticks_rad = -np.radians(np.remainder(ra_hour_ticks_deg, 360))  # Negate!
@@ -170,22 +177,22 @@ class astrolore_dataset():
         ra_hour_ticks_rad[ra_hour_ticks_rad > np.pi] -= 2*np.pi
         ra_hour_labels = [f'{int((deg / 15) % 24)}h' for deg in ra_hour_ticks_deg]
         ax.set_xticks(ra_hour_ticks_rad)
-        ax.set_xticklabels(ra_hour_labels, fontsize=16, color='white')
+        ax.set_xticklabels(ra_hour_labels, fontsize=12, color='white')
 
         dec_ticks_rad = ax.get_yticks()
         dec_ticks_deg = np.degrees(dec_ticks_rad)
         dec_tick_labels = [f"{int(np.round(deg))}°" for deg in dec_ticks_deg]
         ax.set_yticks(dec_ticks_rad)
-        ax.set_yticklabels(dec_tick_labels, color='white', fontsize=24)
+        ax.set_yticklabels(dec_tick_labels, color='white', fontsize=10)
 
         ax.spines['geo'].set_edgecolor('white')
         ax.spines['geo'].set_linewidth(1)
 
-        ax.set_xlabel(r'$RA$', fontsize=24, color='white')
-        ax.set_ylabel(r'$DEC$', fontsize=24, color='white')
+        ax.set_xlabel(r'$RA$', fontsize=14, color='white')
+        ax.set_ylabel(r'$DEC$', fontsize=14, color='white')
 
-        ax.xaxis.set_tick_params(labelsize=22, color='white')
-        ax.yaxis.set_tick_params(labelsize=24, color='white')
+        ax.xaxis.set_tick_params(labelsize=12, color='white')
+        ax.yaxis.set_tick_params(labelsize=12, color='white')
 
         if closest_ra_rad != user_ra_rad and \
            closest_dec_rad != user_dec_rad:
@@ -206,11 +213,16 @@ class astrolore_dataset():
         # text for the closest object in the dataset
         ax.text(closest_ra_rad, closest_dec_rad-.06, 
                 closest_name, ha='center', va='top', color='gold', 
-                fontsize=14, bbox=dict(facecolor='gainsboro', alpha=0.5))
+                fontsize=10, bbox=dict(facecolor='gainsboro', alpha=0.5))
         # text for the object provided by the user
+
+        if self.name is None:
+            name_print = self.user_coords
+        else:
+            name_print = self.name
         ax.text(user_ra_rad, user_dec_rad-.06, 
-                user_name, ha='center', va='top', color='white', 
-                fontsize=14, bbox=dict(facecolor='gainsboro', alpha=.5))
+                name_print, ha='center', va='top', color='white', 
+                fontsize=10, bbox=dict(facecolor='gainsboro', alpha=.5))
 
         ax.grid(True, alpha=.6, color='white', linewidth=1)
         return fig, ax

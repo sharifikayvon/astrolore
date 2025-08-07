@@ -118,33 +118,31 @@ def reset_all():
 button_state = tk.StringVar(value="process")
 
 
-visualize_button = ttk.Button(frame, text="Observe in Sky", command=astrolore.aladin_webview)
+visualize_button = ttk.Button(frame, text="View in Aladin", command=astrolore.aladin_webview)
 visualize_button.config(state='normal')
 
 
-def show_plot():
+
+def show_plot(get_fig_func):
     # Create a new pop-up window
     plot_window = tk.Toplevel(window)
-    plot_window.title("Plot Window")
-    plot_window.geometry("500x400")
+    plot_window.title("Full Sky Map")
+    plot_window.geometry("800x600")
 
-    # Create the plot
-    fig, ax = plt.subplots(figsize=(5, 3.5))
-    ax.plot([0, 1, 2, 3], [1, 2, 3, 4], marker='o')
-    ax.set_title("Sky MAP")
-    ax.set_xlabel("X")
-    ax.set_ylabel("Y")
+    # Get figure from function
+    fig, ax = get_fig_func
 
     # Embed plot in the pop-up window
     canvas = FigureCanvasTkAgg(fig, master=plot_window)
     canvas.draw()
     canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
-    # Add a close button
-    ttk.Button(plot_window, text="Close", command=plot_window.destroy).pack(pady=5)
+    #ttk.Button(plot_window, text="Close", command=plot_window.destroy).pack(pady=5)
 
 
-plot_button = ttk.Button(frame, text="Show Plot", command=show_plot)
+
+
+plot_button = ttk.Button(frame, text="Full Sky Map", command=show_plot)
 
 
 def handle_click():
@@ -158,6 +156,9 @@ def handle_click():
                 closest_object = astrolore.find_closest_object(name=name, coords=None)
                 lore = astrolore.output_lore(closest_object)
                 output.config(text=lore)
+                # Define what to plot when Show Plot is clicked
+         
+                plot_button.config(command=lambda: show_plot(astrolore.get_catalog_map()))
                 plot_button.pack(pady=(5,10))
                 visualize_button.pack(pady=(5, 10))
 
@@ -179,6 +180,7 @@ def handle_click():
                     closest_object = astrolore.find_closest_object(name=None, coords=coords)
                     lore = astrolore.output_lore(closest_object)
                     output.config(text=lore)
+                    plot_button.config(command=lambda: show_plot(astrolore.get_catalog_map()))
                     plot_button.pack(pady=(5,10))
                     visualize_button.pack(pady=(5, 10))
                 except Exception as e:
