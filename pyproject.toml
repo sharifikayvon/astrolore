@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "astrolore"
 description = "package for finding nearest source in sci-fi"
-version = "0.0.0"
+version = "1.0.0"
 readme = "README.md"
 
 authors = [
