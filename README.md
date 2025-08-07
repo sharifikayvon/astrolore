@@ -1,4 +1,4 @@
-# astrolore
+# Astrolore
 
 This package, given the name of any astrophysical object, finds the nearest source that has been referenced in science fiction. There are options to 1) observe
 the nearest sci-fi source in the [Aladin Sky Atlas](https://aladin.cds.unistra.fr/AladinLite/) and 2) generate a sky plot showing the separation between the input object and nearest sci-fi source.
@@ -40,6 +40,7 @@ astrolore.closest_star_finder(obj_name)
 * Isabele Souza Vitorio (ivitorio@umich.edu)
 * Joe Adamo (jadamo@arizona.edu)
 * Kayvon Sharifi (ksharifi1@gsu.edu)
+
 
 
 
