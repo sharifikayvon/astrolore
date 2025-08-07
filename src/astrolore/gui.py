@@ -1,10 +1,11 @@
 from astrolore.dataset import astrolore_dataset
 import tkinter as tk
 from tkinter import ttk
-from dataset import *
+from astrolore.dataset import *
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 from PIL import Image, ImageTk
+from importlib.resources import files
 
 
 class main_gui():
@@ -34,7 +35,8 @@ class main_gui():
         window.resizable(False, False)
 
         # Load and resize background image (change path to your actual image)
-        bg_image = Image.open("background.png")
+        background_path = files("astrolore.data").joinpath("background.png")
+        bg_image = Image.open(background_path)
         bg_image = bg_image.resize((800, 600), Image.LANCZOS)
         bg_photo = ImageTk.PhotoImage(bg_image)
         window.bg_photo = bg_photo  # prevent GC

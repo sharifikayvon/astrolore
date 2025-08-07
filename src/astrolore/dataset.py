@@ -14,7 +14,8 @@ class astrolore_dataset():
     """
     def __init__(self):
         """Class constructor, loads in data from csv file"""
-        csv_path = files("src.astrolore.data").joinpath("scifi_dataset.csv")
+        csv_path = files("astrolore.data").joinpath("scifi_dataset.csv")
+        print(csv_path)
         self.scifi_dataframe = pd.read_csv(csv_path)
         
 
@@ -40,16 +41,34 @@ class astrolore_dataset():
 
     @staticmethod
     def get_coords_from_name(name):
+        """returns the (ra, dec) of the given object as a SkyCord object"""
         return SkyCoord.from_name(name)
     
     def name_of_object(self, object):
+        """given an object in the scifi dataset, return its name
+        
+        Args:
+            object (pandas.Series): Object from the dataset
+        Returns:
+            name (string): name of object
+        Raises:
+            ValueError: If object is the incorrect type
+        """
         if isinstance(object, pd.Series):
             return object["name"]
         else:
             raise ValueError
 
     def index_of_object(self, object):
+        """Given an object (name or object) in the dataset, returns its index
 
+        Args:
+            object (string or pandas.Series): _description_
+        Raises:
+            ValueError: If object is invalid type
+        Returns:
+            idx (int): index of object in the science dataset
+        """
         if isinstance(object, str):
             names = list(self.scifi_dataframe["name"])
             idx = names.index(object)
@@ -78,21 +97,17 @@ class astrolore_dataset():
         else:
             self.name = name.capitalize()
 
-
-
         if coords is None:
             self.user_coords = self.get_coords_from_name(name)           
         else:
             ra, dec = coords
             self.user_coords = SkyCoord(ra=ra, dec=dec)
         
-
         #name = input('''Welcome to AstroLoreBot v1.0!\nGiven an astrophysical object of your choice, I output the nearest object on the sky referenced in sci-fi.\nWhenever you're ready, name your object:\n>>> ''')
         self.scifi_dataframe['ang_sep'] = SkyCoord(ra=self.scifi_dataframe.ra.values, dec=self.scifi_dataframe.dec.values).separation(self.user_coords).value
         close_object = self.scifi_dataframe.loc[self.scifi_dataframe.ang_sep.idxmin()]
         return close_object
     
-
     def output_lore(self, close_object:pd.Series):
         # Convert string to list of sources
         raw = close_object.scifi_source.strip("()")
