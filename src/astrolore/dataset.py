@@ -5,6 +5,7 @@ import webbrowser
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from importlib.resources import files
 import webview
 
 class astrolore_dataset():
@@ -13,8 +14,8 @@ class astrolore_dataset():
     """
     def __init__(self):
         """Class constructor, loads in data from csv file"""
-        path = os.path.dirname(__file__)
-        self.scifi_dataframe = pd.read_csv(os.path.join(path, "data", "scifi_dataset.csv"))
+        csv_path = files("src.astrolore.data").joinpath("scifi_dataset.csv")
+        self.scifi_dataframe = pd.read_csv(csv_path)
         
 
     @staticmethod

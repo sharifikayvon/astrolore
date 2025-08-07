@@ -20,14 +20,13 @@ dependencies = [
     "astropy",
     "numpy",
     "build",
-    "setuptools"
+    "setuptools",
+    "pywebview",
+    "matplotlib"
 ]
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.setuptools.package-data]
-myModule = ["*.csv"]
 
 [project.urls]
 Homepage = "https://github.com/sharifikayvon/astrolore"
