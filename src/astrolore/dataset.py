@@ -161,8 +161,8 @@ class astrolore_dataset():
         ax.set_facecolor('black')                  # Background of the plot area
 
         ax.scatter(ra_rad, dec_rad, c='white', marker='*', s=60)
-        ax.scatter(closest_ra_rad, closest_dec_rad, c='gold', marker='*', s=300)
-        ax.scatter(user_ra_rad, user_dec_rad, c="blue", marker="o", s=100)
+        ax.scatter(closest_ra_rad, closest_dec_rad, c='gold', marker='*', s=150)
+        ax.scatter(user_ra_rad, user_dec_rad, c="red", marker="*", s=250)
 
         ra_hour_ticks_deg = np.arange(0, 360, 30)  # 0h to 23h
         ra_hour_ticks_rad = -np.radians(np.remainder(ra_hour_ticks_deg, 360))  # Negate!
