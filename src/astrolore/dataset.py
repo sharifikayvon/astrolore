@@ -5,6 +5,7 @@ import webbrowser
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from . import DATADIR
 
 class astrolore_dataset():
     """This class contains the dataset of astronomical objects in science fiction properties,
@@ -12,8 +13,7 @@ class astrolore_dataset():
     """
     def __init__(self):
         """Class constructor, loads in data from csv file"""
-        path = os.path.dirname(__file__)
-        self.scifi_dataframe = pd.read_csv(os.path.join(path, "data", "scifi_dataset.csv"))
+        self.scifi_dataframe = pd.read_csv(os.path.join(DATADIR, "scifi_dataset.csv"))
         
 
     @staticmethod
