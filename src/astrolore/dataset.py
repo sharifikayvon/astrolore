@@ -247,28 +247,13 @@ class astrolore_dataset():
         return fig, ax
 
 
-    def load_aladin(self):
-        """Launch Aladin window to observe nearest sci-fi source"""        
-        if_vis = input('\nDo you want to observe the source in the real world?\n>>> ').strip().lower()
-        if if_vis in ('yes', 'y'):
-            coord_close_star = SkyCoord(ra=self.close_object.ra, dec=self.close_object.dec)
-            url = f"https://aladin.u-strasbg.fr/AladinLite/?target={coord_close_star.ra.deg}%20{coord_close_star.dec.deg}&fov=1.5"
-            webbrowser.open(url)
-
-
-    '''def aladin_webview(self):
-        coord_close_object = SkyCoord(ra=self.close_object.ra, dec=self.close_object.dec)
-        url = f"https://aladin.u-strasbg.fr/AladinLite/?target={coord_close_object.ra.deg}%20{coord_close_object.dec.deg}&fov=1.5"
-        # Create the embedded webview window inside the Toplevel
-        webview.create_window(
-            "Aladin",
-            url,
-            width=600,
-            height=400,
-            resizable=False,
-        )
-
-        webview.start()'''
+    # def load_aladin(self):
+    #     """Launch Aladin window to observe nearest sci-fi source"""        
+    #     if_vis = input('\nDo you want to observe the source in the real world?\n>>> ').strip().lower()
+    #     if if_vis in ('yes', 'y'):
+    #         coord_close_star = SkyCoord(ra=self.close_object.ra, dec=self.close_object.dec)
+    #         url = f"https://aladin.u-strasbg.fr/AladinLite/?target={coord_close_star.ra.deg}%20{coord_close_star.dec.deg}&fov=1.5"
+    #         webbrowser.open(url)
 
 
 
