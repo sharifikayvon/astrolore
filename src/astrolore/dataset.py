@@ -125,8 +125,8 @@ class astrolore_dataset():
 
         dec_rad = pd.DataFrame(np.radians(coords.dec.value))
 
-        user_coords = SkyCoord(ra=closest_object.ra, dec=closest_object.dec)
-        closest_ra_rad, closest_dec_rad = self.convert_to_plotting_rad(user_coords)
+        closest_coords = SkyCoord(ra=closest_object.ra, dec=closest_object.dec)
+        closest_ra_rad, closest_dec_rad = self.convert_to_plotting_rad(closest_coords)
 
         return ra_rad, dec_rad, closest_ra_rad, closest_dec_rad
 
@@ -140,6 +140,7 @@ class astrolore_dataset():
         return closest_ra_rad, closest_dec_rad
 
     def get_catalog_map(self, user_name=None):
+        
         if user_name == None:
             user_name = 'Arcturus'
 
@@ -149,7 +150,6 @@ class astrolore_dataset():
         closest_object = self.find_closest_object(user_name)
         closest_name = self.name_of_object(closest_object)
         ra_rad, dec_rad, closest_ra_rad, closest_dec_rad = self.init_catalog_map(closest_object)
-        print(closest_ra_rad, user_ra_rad)
 
         fig, ax = plt.subplots(subplot_kw={'projection': 'aitoff'}, figsize=(26,9))
 
