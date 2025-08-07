@@ -23,13 +23,10 @@ pip install astrolore
 ### Running the code
 
 ```python
-import astrolore
+from astrolore import gui
 
-obj_name = 'Pleiades'
+gui.main_gui().start_gui()
 
-
-
-astrolore.closest_star_finder(obj_name)
 ```
 <div align="center">
   <img width="528" height="416" alt="image" src="https://github.com/user-attachments/assets/3b48d0e0-c7f1-4351-abbb-ee5d91de5f38" />
@@ -41,6 +38,7 @@ astrolore.closest_star_finder(obj_name)
 * Isabele Souza Vitorio (ivitorio@umich.edu)
 * Joe Adamo (jadamo@arizona.edu)
 * Kayvon Sharifi (ksharifi1@gsu.edu)
+
 
 
 
