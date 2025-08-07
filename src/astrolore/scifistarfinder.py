@@ -2,7 +2,9 @@ import pandas as pd
 from astropy.coordinates import SkyCoord
 import astropy.units as u
 import webbrowser
+import webview
 import os
+import tkinter as tk
 
 class AstroLore():
 
@@ -49,14 +51,12 @@ class AstroLore():
         sep = round(self.close_star.ang_sep, 5)
         if sep < 0.01:
             output = (
-                f"\nWow, {self.name}! "
                 f"Your chosen object is itself referenced in science fiction!\n"
                 f"\nThe {self.close_star['name']} {self.close_star.object_type} appears/is referenced in {formatted_sources}. Here's some lore about {self.close_star['name']}:\n"
                 f"\n{self.close_star.lore}\n"
             )
         else:
             output = (
-                f"\nWow, {self.name}! "
                 f"The nearest object referenced in sci-fi is {sep} degrees away — "
                 f"The {self.close_star['name']} {self.close_star.object_type}. "
                 f"Here's some lore about {self.close_star['name']}:\n"
@@ -74,6 +74,24 @@ class AstroLore():
             coord_close_star = SkyCoord(ra=self.close_star.ra, dec=self.close_star.dec)
             url = f"https://aladin.u-strasbg.fr/AladinLite/?target={coord_close_star.ra.deg}%20{coord_close_star.dec.deg}&fov=1.5"
             webbrowser.open(url)
+
+
+    def visualize_gui(self):
+        coord_close_star = SkyCoord(ra=self.close_star.ra, dec=self.close_star.dec)
+        url = f"https://aladin.u-strasbg.fr/AladinLite/?target={coord_close_star.ra.deg}%20{coord_close_star.dec.deg}&fov=1.5"
+        # Create the embedded webview window inside the Toplevel
+        webview.create_window(
+            "Aladin",
+            url,
+            width=600,
+            height=400,
+            resizable=False,
+            #gui='tk',
+            #master=win
+        )
+
+        # Start webview in embedded mode; this will NOT block Tkinter mainloop
+        webview.start()#gui='tk')
 
 
 
