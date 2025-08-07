@@ -108,13 +108,13 @@ class astrolore_dataset():
                 f"The nearest object referenced in sci-fi is {sep} degrees away — "
                 f"The {close_object['name']} {close_object.object_type}. "
                 f"Here's some lore about {close_object['name']}:\n"
-                f"\nThe {close_object['name']} {close_object.object_type} appears/is referenced in {formatted_sources}. {self.close_object.lore}"
+                f"\nThe {close_object['name']} {close_object.object_type} appears/is referenced in {formatted_sources}. {close_object.lore}"
             )
 
         return output
 
     def init_catalog_map(self, closest_object:pd.Series):
-
+ 
         # TODO: Simplify this function (if time)
         coords = SkyCoord(ra=self.scifi_dataframe.ra.values, dec=self.scifi_dataframe.dec.values)
 
