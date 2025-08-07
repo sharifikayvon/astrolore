@@ -99,7 +99,7 @@ class astrolore_dataset():
             output = (
                 f"\nSearching around {self.name}...\n"
                 f"Your chosen object is referenced in science fiction!\n"
-                f"\nThe {close_object['name']} {close_object.object_type} appears/is referenced in {formatted_sources}. Here's some lore about {self.close_object['name']}:\n"
+                f"\nThe {close_object['name']} {close_object.object_type} appears/is referenced in {formatted_sources}. Here's some lore about {close_object['name']}:\n"
                 f"\n{close_object.lore}\n"
             )
         else:
@@ -140,7 +140,7 @@ class astrolore_dataset():
         return closest_ra_rad, closest_dec_rad
 
     def get_catalog_map(self, user_name=None):
-        
+
         if user_name == None:
             user_name = 'Arcturus'
 

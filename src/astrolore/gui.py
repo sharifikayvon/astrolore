@@ -70,9 +70,10 @@ class main_gui():
 
     def _handle_click(self):
         input = self.entry_widget.get()
-        closest_star = self.dataset.find_closest_object(input)
+        closest_object = self.dataset.find_closest_object(input)
+        lore = self.dataset.output_lore(closest_object)
         #output = tk.Label(text=processor.process(input))
-        self.output.config(text=closest_star)
+        self.output.config(text=lore)
         self.window.update_idletasks()  # Refresh layout
         self.window.geometry("")        # Resize to fit content
 
