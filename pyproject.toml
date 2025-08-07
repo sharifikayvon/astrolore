@@ -29,7 +29,7 @@ dependencies = [
 where = ["src"]
 
 [tool.setuptools.package-data]
-"astrolore.data" = ["*.csv"]
+"astrolore.data" = ["*.csv", "*.png"]
 
 [project.urls]
 Homepage = "https://github.com/sharifikayvon/astrolore"
