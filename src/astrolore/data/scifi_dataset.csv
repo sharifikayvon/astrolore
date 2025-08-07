@@ -9,8 +9,7 @@ Epsilon Alangue,16h18m19.2902245358s,-04d41m33.047349888s,(Dune),Star,"Home of t
 Gamma Piscium,23h17m09.9371132484s,03d16m56.245688417s,(Dune),Star,"Home to several planets including Selusa Secundus, which was once the home planet of House Corrino."
 Andromeda Galaxy,0h42m42.00s,41d16m00.0s,(Star Trek - TOS),Galaxy,"Home of the Kelvans, who try to take over our galaxy."
 Pinwheel Galaxy,1h33m54.00s,30d39m00.0s,(Star Trek - TNG),Galaxy,Mentioned in Star Trek TNG S1E6 Where No One Has Gone Before
-"Tau Ceti III is in this system in the Star Trek universe. It is also a nearby star system with colonies and lore significance in the Mass Effect universe. This system was also the desired destination by the Nauvuo in the Expanse, before the Eros incident. It is also part of the the book Project Hail Mary, novel by Andy Weir, where one astronaut is trying to save Earth
-",1h44m05.13s,-15d56m14.4s,"(Star Trek -TNG, VOY, Mass Effect, The Expanse)",Star,"(Star Trek -TNG, VOY, Mass Effect, The Expanse, Project Hail Mary)"
+Tau Ceti,1h44m05.13s,-15d56m14.4s,"(Star Trek -TNG, VOY, Mass Effect, The Expanse, Halo, Project Hail Mary)",Star,"In Halo, this system was the site of operation first strike, where the Master Chief succesfully destroyed a massive Covenant armada set to invade Earth between Halo CE and 2. In the Expanse, this system was the set destination of the generation ship the Nauvou, before the ship was repurposed after the Eros incident. The system shows up as a colony in the Mass Effect games, and plays a prominent role in the book Project Hail Mary."
 Delta Trianguli,2h17m02.42s,34d13m29.4s,(Star Trek - TAS),Star,Delta Triangle where ships vanish.
 Gamma Trianguli,2h17m18.84s,33d50m50.4s,(Star Trek - TOS),Star,Gamma Trianguli VI guarded by Vaal.
 Mira (Omicron Ceti),2h19m20.79s,-02d58m37.4s,"(Star Trek - TOS, TNG)",Star,Ceti III: spores; Dytallix B: alien parasites.
@@ -37,7 +36,7 @@ Mizar,13h23m55.42s,54d55m31.5s,(Star Trek - TNG),Star,Mizar II: conquered multip
 Izar,14h44m59.25s,27d04m27.0s,(Star Trek - TOS),Double Star System,Elba II: insane asylum.
 Antares,16h29m24.47s,-26d25m55.0s,"(Star Trek - TOS, DS9)",Star,Beta Antares IV: card game.
 Atria,16h48m39.87s,-69d01m39.5s,(Star Trek - TNG),Star,Briefly mentioned.
-Barnard’s Star,17h57m48.00s,04d41m36.0s,(Star Trek - VOY),Star,"In the Star Trek universe, the planet Matanda orbited Barnard's Star. In 2366, Starfleet Science Archaeology Division conducted an archaeological expedition to Matanda, led by Commander Anne Lansing aboard the USS Worsaae. It is also mentioned and depicted as a nearby star system during expansions and travel sequences"
+Barnard’s,17h57m48.00s,04d41m36.0s,(Star Trek - VOY),Star,"In the Star Trek universe, the planet Matanda orbited Barnard's Star. In 2366, Starfleet Science Archaeology Division conducted an archaeological expedition to Matanda, led by Commander Anne Lansing aboard the USS Worsaae. It is also mentioned and depicted as a nearby star system during expansions and travel sequences"
 Vega,18h36m56.00s,38d47m00.1s,"(Star Trek - TOS, Contact, Babylon 5)",Star,"Delta Vega & Vega IX planets in the Star Trek universe. It is also the source of the alien radio signal received by Earth, pivotal for first contact in the 1997 movie ""Contact"". Also mentioned as an Earth colony in Babylon 5"
 Sheliak,18h50m04.79s,33d21m45.6s,(Star Trek - TAS),Star,Beta Lyrae system; Kzin home.
 Alsafi,19h32m20.59s,69d39m55.4s,(Star Trek - TOS),Star,Sigma Draconis VI: matriarchy.
@@ -50,7 +49,7 @@ Iota Leporis,05h12m17.9105854648s,-11d52m08.763279736s,(Dune),Binary Star System
 Sirius,06h45m09s,−16d42m58s,(Stargate SG-1),Star,Home star of the Goa’uld System Lords
 Psi Draconis,17h41m57.0s,72d09m10s,(Dune),Binary Star System,"Home of the planets Grumman, Gamont, and Niushe, which all appear in the extended lore of teh Dune universe."
 Sigma Draconis,19h32m21.5902098601s,69d39m40.235805206s,(Dune),Star,"Home to planets Corrin and Ishkai, both prominent locations in the early history of the Imperium. "
-Theta Eridani A,02h58m15.6752536s,-40d18m16.852418s,(Dune),Star,"Home system of the Bene Tleilax, a mysterious group that specialized in genetic alteration. "
+Theta Eridani A,02h58m15.6752536s,-40d18m16.852418s,"(Dune, Project Hail Mary)",Star,"Home system of the Bene Tleilax, a mysterious group that specialized in genetic alteration.  This is also the home star for Rocky from Project Hail Mary book by Andy Weir. "
 Epsilon Eridani,03h32m55s,−09d27m29s,"(Halo, Star Trek -VOY)",Star,"Home to several colonized planets in Halo, most notably Reach. One of the most important systems in the UNSC. In Star Trek, this system is the near several Klingon encounters (Epsilon IV, VIII)."
 Epsilon Eridani b,03h32m55s,−09d27m29s,(Mass Effect),Exoplanet,"Colonized planet in lore, key to some storylines and missions."
 Theta Leonis,11h14m14.4056705348s,15d25m46.455911128s,(Dune),Star,"Home of the planet Hagal, the source of many crown jewels in the Imperium "
@@ -74,3 +73,9 @@ Lambda Serpentis,15h46m26.614212163s,07d21m11.047378824s,(Halo),Star,"Home to th
 LP 656-38,05h01m57.4261317472s,-06d56m46.376281497s,(Halo),Star,"In Halo, this system was originally inhabited by the Forerunners, and subsequently devastated by a Flood infestation bringing the population from 1.5 Billion to less than 9000."
 Gliese 65,01h39m01.452936s,-17d57m02.04516s,(Halo),Star,"In Halo, this sytem was home to the inner UEG colony Luyfen. One of the original spartan IIs (Caleb-095) was born here."
 Psi Serpentis,15h44m01.8185683752s,02d30m54.600593940s,(Halo),Star,"In Halo, this sytstem was the site of the battle of Psi Serpentis in 2549. In this battle, the UNSC succesfully destroyed a large Covenant armada by temprarilly igniting a gas giant in the system."
+Theta Ursae Majoris ,09h32m51.430933s,51d40m38.33331050s,(Halo),Star,"In Halo, this system was an outer colony of the UEG, and was the site of several battles during the Insurrection in the early 2500s"
+XI Boötis A,14h51m23.3884659s,19d06m01.619801s,(Halo),Star,"In Halo, this system was an outer colony of the UEG. In 2526, Admiral Cole succesfully defended this system against a Covenant invasion with heavy casualties."
+Zeta Doradus,05h05m30.655674s,-57d28m21.7368988s,(Halo),Star,"In Halo, this system is home to the Forerunner shield world Onyx, which was the site of a prolonged battle between the UNSC, sentinal defense forces, and Covenant seperatists in 2552."
+Algol,03h08m10.1324535s,40d57m20.328013s,"(The Hitchhiker's Guide to the Galaxy, Star Trek - TNG, That Share of Glory by C.M. Kornbluth)",Binary Star System,"Mentioned in Star Trek TNG S1E6 and in the short story ""That Share of Glory"" by C.M. Kornbluth orignally published in 1952 in which there is a language called Algolian"
+Alphard,09h27m35.24270s,-08d39m30.9583s,The Blind Pilot by Charles Henneberg,Star,"Referred to as an ocean planet in Charles Henneberg's short story ""The Blind Pilot"" first published in 1959"
+Betelgeuse,05h55m10.30536s,07d24m25.4304s,"(The Hitchhiker's Guide to the Galaxy, Babylon 5)",Star,"In Hitchhiker's Guide to the Galaxy, the home system of Ford Prefect and Zaphod Beeblebrox."
