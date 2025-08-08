@@ -1,3 +1,5 @@
+[![Tests](https://github.com/sharifikayvon/astrolore/actions/workflows/test.yaml/badge.svg)](https://github.com/sharifikayvon/astrolore/actions/workflows/test.yaml)
+
 # Astrolore
 
 This package, given coordinates or the name of any astrophysical object, finds the nearest source that has been referenced in science fiction. There are options to 1) observe
@@ -38,6 +40,7 @@ gui.main_gui().start_gui()
 * Isabele Souza Vitorio (ivitorio@umich.edu)
 * Joe Adamo (jadamo@arizona.edu)
 * Kayvon Sharifi (ksharifi1@gsu.edu)
+
 
 
 
